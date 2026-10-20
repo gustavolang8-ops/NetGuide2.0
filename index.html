@@ -253,7 +253,7 @@
             <span class="text-slate-500 dark:text-slate-400 text-[13px] font-semibold uppercase tracking-wider">Clientes no Site</span>
             <div class="p-2.5 bg-cyan-50 dark:bg-cyan-950/50 text-cyan-600 dark:text-cyan-400 rounded-2xl"><i data-lucide="users" class="w-5 h-5"></i></div>
           </div>
-          <span class="text-3xl font-black text-slate-900 dark:text-white" id="stat-clients">142</span>
+          <span class="text-3xl font-black text-slate-900 dark:text-white" id="stat-clients">34</span>
         </div>
 
         <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm p-6 rounded-3xl hover:shadow-md transition">
@@ -261,7 +261,7 @@
             <span class="text-slate-500 dark:text-slate-400 text-[13px] font-semibold uppercase tracking-wider">Usuários Ativos</span>
             <div class="p-2.5 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 rounded-2xl"><i data-lucide="user-check" class="w-5 h-5"></i></div>
           </div>
-          <span class="text-3xl font-black text-slate-900 dark:text-white" id="stat-active">89</span>
+          <span class="text-3xl font-black text-slate-900 dark:text-white" id="stat-active">28</span>
         </div>
 
         <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm p-6 rounded-3xl hover:shadow-md transition">
@@ -269,7 +269,7 @@
             <span class="text-slate-500 dark:text-slate-400 text-[13px] font-semibold uppercase tracking-wider">Scans Realizados</span>
             <div class="p-2.5 bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 rounded-2xl"><i data-lucide="scan" class="w-5 h-5"></i></div>
           </div>
-          <span class="text-3xl font-black text-slate-900 dark:text-white" id="stat-scans">1,208</span>
+          <span class="text-3xl font-black text-slate-900 dark:text-white" id="stat-scans">19</span>
         </div>
 
         <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm p-6 rounded-3xl hover:shadow-md transition">
@@ -282,7 +282,7 @@
       </div>
 
       <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm p-6 rounded-3xl w-full overflow-hidden">
-        <h3 class="text-base font-bold text-slate-900 dark:text-white mb-4" id="chart-title-text">Clientes utilizando o site ao longo dos dias (7 Dias)</h3>
+        <h3 class="text-base font-bold text-slate-900 dark:text-white mb-4" id="chart-title-text">Acessos nas últimas 24 horas</h3>
         <div class="h-64 relative w-full">
           <canvas id="chartUsage"></canvas>
         </div>
@@ -670,7 +670,7 @@
       showToast('Sessão administrativa encerrada.', 'info');
     }
 
-    // Inicialização do Gráfico Chart.js
+    // Inicialização do Gráfico Chart.js com proporções realistas
     const ctx = document.getElementById('chartUsage').getContext('2d');
     const usageChart = new Chart(ctx, {
       type: 'line',
@@ -678,7 +678,7 @@
         labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
         datasets: [{
           label: 'Acessos de Clientes',
-          data: [65, 89, 120, 142, 110, 155, 170],
+          data: [14, 18, 22, 25, 20, 28, 32],
           borderColor: '#0891b2',
           backgroundColor: 'rgba(8, 145, 178, 0.08)',
           fill: true,
@@ -698,7 +698,7 @@
     });
 
     // ==========================================
-    // FILTRO DINÂMICO DO DASHBOARD
+    // FILTRO DINÂMICO DO DASHBOARD (NÚMEROS REALISTAS)
     // ==========================================
     function filterDashboard(period) {
       document.querySelectorAll('.dashboard-filter').forEach(btn => {
@@ -707,43 +707,43 @@
       const activeBtn = document.getElementById(`filter-${period}`);
       activeBtn.className = "dashboard-filter px-3.5 py-1.5 rounded-xl text-[12px] font-bold bg-cyan-600 text-white shadow-sm";
 
-      let clients = "142";
-      let active = "89";
-      let scans = "1,208";
+      let clients = "125";
+      let active = "98";
+      let scans = "72";
       let chartLabels = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
-      let chartData = [65, 89, 120, 142, 110, 155, 170];
+      let chartData = [14, 18, 22, 25, 20, 28, 32];
       let titleText = "Clientes utilizando o site ao longo dos dias (7 Dias)";
 
       if (period === '24h') {
         clients = "34";
-        active = "21";
-        scans = "184";
+        active = "28";
+        scans = "19";
         chartLabels = ['00h', '04h', '08h', '12h', '16h', '20h', '24h'];
-        chartData = [5, 2, 12, 38, 45, 52, 28];
+        chartData = [2, 1, 4, 8, 7, 9, 3];
         titleText = "Acessos nas últimas 24 horas";
         showToast('Filtro aplicado: Últimas 24 horas', 'info');
       } else if (period === '48h') {
-        clients = "78";
-        active = "45";
-        scans = "490";
+        clients = "68";
+        active = "54";
+        scans = "38";
         chartLabels = ['Ontem P1', 'Ontem P2', 'Hoje P1', 'Hoje P2'];
-        chartData = [25, 42, 68, 85];
+        chartData = [12, 15, 18, 23];
         titleText = "Acessos nas últimas 48 horas";
         showToast('Filtro aplicado: Últimas 48 horas', 'info');
       } else if (period === '7d') {
-        clients = "142";
-        active = "89";
-        scans = "1,208";
+        clients = "125";
+        active = "98";
+        scans = "72";
         chartLabels = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
-        chartData = [65, 89, 120, 142, 110, 155, 170];
+        chartData = [14, 18, 22, 25, 20, 28, 32];
         titleText = "Clientes utilizando o site ao longo dos dias (7 Dias)";
         showToast('Filtro aplicado: Últimos 7 Dias', 'info');
       } else if (period === 'mes') {
-        clients = "1,450";
-        active = "920";
-        scans = "8,450";
+        clients = "520";
+        active = "410";
+        scans = "315";
         chartLabels = ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'];
-        chartData = [1200, 1650, 1900, 2300];
+        chartData = [110, 130, 145, 135];
         titleText = "Clientes utilizando o site (Este Mês)";
         showToast('Filtro aplicado: Este Mês', 'info');
       }
