@@ -1,0 +1,70 @@
+/*  
+    NetGuide - Estilos SaaS Moderno & Futurista (Light & Dark Mode)
+*/
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+}
+
+@media (min-width: 768px) {
+    body {
+        flex-direction: row;
+        height: 100vh;
+        overflow: hidden;
+    }
+}
+
+main {
+    -webkit-overflow-scrolling: touch;
+}
+
+/* ==========================================
+   EFEITOS VISUAIS E COMPONENTES MODERNOS
+   ========================================== */
+.glass-card {
+    backdrop-filter: blur(12px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 40px -10px rgba(8, 145, 178, 0.12);
+}
+
+/* Scrollbar Estilizada Responsiva */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+.dark ::-webkit-scrollbar-thumb {
+    background: #334155;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+.pt-safe {
+    padding-top: env(safe-area-inset-top, 1rem);
+}
+
+.hidden {
+    display: none !important;
+}
