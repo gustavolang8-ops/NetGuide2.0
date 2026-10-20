@@ -232,9 +232,19 @@
 
     <!-- SEÇÃO: DASHBOARD -->
     <section id="sec-dashboard" class="hidden space-y-6 max-w-full overflow-hidden">
-      <div>
-        <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Dashboard</h2>
-        <p class="text-slate-600 dark:text-slate-300 text-[13px] mt-0.5">Visão geral do autoatendimento e métricas da plataforma.</p>
+      <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+        <div>
+          <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Dashboard</h2>
+          <p class="text-slate-600 dark:text-slate-300 text-[13px] mt-0.5">Visão geral do autoatendimento e métricas da plataforma.</p>
+        </div>
+        
+        <!-- FILTRO DE PERÍODO INTERATIVO -->
+        <div class="flex items-center gap-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-1.5 rounded-2xl shadow-sm overflow-x-auto">
+          <button onclick="filterDashboard('24h')" id="filter-24h" class="dashboard-filter px-3.5 py-1.5 rounded-xl text-[12px] font-bold transition-all bg-cyan-600 text-white shadow-sm">24h</button>
+          <button onclick="filterDashboard('48h')" id="filter-48h" class="dashboard-filter px-3.5 py-1.5 rounded-xl text-[12px] font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">48h</button>
+          <button onclick="filterDashboard('7d')" id="filter-7d" class="dashboard-filter px-3.5 py-1.5 rounded-xl text-[12px] font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">7 Dias</button>
+          <button onclick="filterDashboard('mes')" id="filter-mes" class="dashboard-filter px-3.5 py-1.5 rounded-xl text-[12px] font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">Este Mês</button>
+        </div>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 w-full">
@@ -243,7 +253,7 @@
             <span class="text-slate-500 dark:text-slate-400 text-[13px] font-semibold uppercase tracking-wider">Clientes no Site</span>
             <div class="p-2.5 bg-cyan-50 dark:bg-cyan-950/50 text-cyan-600 dark:text-cyan-400 rounded-2xl"><i data-lucide="users" class="w-5 h-5"></i></div>
           </div>
-          <span class="text-3xl font-black text-slate-900 dark:text-white">142</span>
+          <span class="text-3xl font-black text-slate-900 dark:text-white" id="stat-clients">142</span>
         </div>
 
         <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm p-6 rounded-3xl hover:shadow-md transition">
@@ -251,7 +261,7 @@
             <span class="text-slate-500 dark:text-slate-400 text-[13px] font-semibold uppercase tracking-wider">Usuários Ativos</span>
             <div class="p-2.5 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 rounded-2xl"><i data-lucide="user-check" class="w-5 h-5"></i></div>
           </div>
-          <span class="text-3xl font-black text-slate-900 dark:text-white">89</span>
+          <span class="text-3xl font-black text-slate-900 dark:text-white" id="stat-active">89</span>
         </div>
 
         <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm p-6 rounded-3xl hover:shadow-md transition">
@@ -259,7 +269,7 @@
             <span class="text-slate-500 dark:text-slate-400 text-[13px] font-semibold uppercase tracking-wider">Scans Realizados</span>
             <div class="p-2.5 bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 rounded-2xl"><i data-lucide="scan" class="w-5 h-5"></i></div>
           </div>
-          <span class="text-3xl font-black text-slate-900 dark:text-white">1,208</span>
+          <span class="text-3xl font-black text-slate-900 dark:text-white" id="stat-scans">1,208</span>
         </div>
 
         <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm p-6 rounded-3xl hover:shadow-md transition">
@@ -272,7 +282,7 @@
       </div>
 
       <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm p-6 rounded-3xl w-full overflow-hidden">
-        <h3 class="text-base font-bold text-slate-900 dark:text-white mb-4">Clientes utilizando o site ao longo dos dias</h3>
+        <h3 class="text-base font-bold text-slate-900 dark:text-white mb-4" id="chart-title-text">Clientes utilizando o site ao longo dos dias (7 Dias)</h3>
         <div class="h-64 relative w-full">
           <canvas id="chartUsage"></canvas>
         </div>
@@ -660,6 +670,7 @@
       showToast('Sessão administrativa encerrada.', 'info');
     }
 
+    // Inicialização do Gráfico Chart.js
     const ctx = document.getElementById('chartUsage').getContext('2d');
     const usageChart = new Chart(ctx, {
       type: 'line',
@@ -685,6 +696,67 @@
         }
       }
     });
+
+    // ==========================================
+    // FILTRO DINÂMICO DO DASHBOARD
+    // ==========================================
+    function filterDashboard(period) {
+      document.querySelectorAll('.dashboard-filter').forEach(btn => {
+        btn.className = "dashboard-filter px-3.5 py-1.5 rounded-xl text-[12px] font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all";
+      });
+      const activeBtn = document.getElementById(`filter-${period}`);
+      activeBtn.className = "dashboard-filter px-3.5 py-1.5 rounded-xl text-[12px] font-bold bg-cyan-600 text-white shadow-sm";
+
+      let clients = "142";
+      let active = "89";
+      let scans = "1,208";
+      let chartLabels = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+      let chartData = [65, 89, 120, 142, 110, 155, 170];
+      let titleText = "Clientes utilizando o site ao longo dos dias (7 Dias)";
+
+      if (period === '24h') {
+        clients = "34";
+        active = "21";
+        scans = "184";
+        chartLabels = ['00h', '04h', '08h', '12h', '16h', '20h', '24h'];
+        chartData = [5, 2, 12, 38, 45, 52, 28];
+        titleText = "Acessos nas últimas 24 horas";
+        showToast('Filtro aplicado: Últimas 24 horas', 'info');
+      } else if (period === '48h') {
+        clients = "78";
+        active = "45";
+        scans = "490";
+        chartLabels = ['Ontem P1', 'Ontem P2', 'Hoje P1', 'Hoje P2'];
+        chartData = [25, 42, 68, 85];
+        titleText = "Acessos nas últimas 48 horas";
+        showToast('Filtro aplicado: Últimas 48 horas', 'info');
+      } else if (period === '7d') {
+        clients = "142";
+        active = "89";
+        scans = "1,208";
+        chartLabels = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+        chartData = [65, 89, 120, 142, 110, 155, 170];
+        titleText = "Clientes utilizando o site ao longo dos dias (7 Dias)";
+        showToast('Filtro aplicado: Últimos 7 Dias', 'info');
+      } else if (period === 'mes') {
+        clients = "1,450";
+        active = "920";
+        scans = "8,450";
+        chartLabels = ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'];
+        chartData = [1200, 1650, 1900, 2300];
+        titleText = "Clientes utilizando o site (Este Mês)";
+        showToast('Filtro aplicado: Este Mês', 'info');
+      }
+
+      document.getElementById('stat-clients').innerText = clients;
+      document.getElementById('stat-active').innerText = active;
+      document.getElementById('stat-scans').innerText = scans;
+      document.getElementById('chart-title-text').innerText = titleText;
+
+      usageChart.data.labels = chartLabels;
+      usageChart.data.datasets[0].data = chartData;
+      usageChart.update();
+    }
 
     let cameraActive = false;
     let isCorrected = false;
