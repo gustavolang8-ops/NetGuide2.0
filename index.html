@@ -98,7 +98,7 @@
   <div id="mobile-overlay" onclick="toggleMobileMenu()" class="hidden fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-30 sm:hidden"></div>
 
   <!-- CONTEÚDO PRINCIPAL -->
-  <main class="flex-1 bg-slate-50 dark:bg-slate-950 p-4 sm:p-8 w-full pt-24 pb-16 sm:pt-8 sm:pb-8 transition-colors duration-300">
+  <main class="flex-1 bg-slate-50 dark:bg-slate-950 p-4 sm:p-8 w-full pt-24 pb-16 sm:pt-8 sm:pb-8 transition-colors duration-300 overflow-x-hidden">
 
     <!-- SEÇÃO: SCANEAR ROTEADOR -->
     <section id="sec-scan" class="space-y-6 max-w-full">
@@ -231,13 +231,13 @@
     </section>
 
     <!-- SEÇÃO: DASHBOARD -->
-    <section id="sec-dashboard" class="hidden space-y-6 max-w-full">
+    <section id="sec-dashboard" class="hidden space-y-6 max-w-full overflow-hidden">
       <div>
         <h2 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Dashboard</h2>
         <p class="text-slate-600 dark:text-slate-300 text-[13px] mt-0.5">Visão geral do autoatendimento e métricas da plataforma.</p>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 w-full">
         <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm p-6 rounded-3xl hover:shadow-md transition">
           <div class="flex justify-between items-start mb-3">
             <span class="text-slate-500 dark:text-slate-400 text-[13px] font-semibold uppercase tracking-wider">Clientes no Site</span>
@@ -271,15 +271,15 @@
         </div>
       </div>
 
-      <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm p-6 rounded-3xl">
+      <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm p-6 rounded-3xl w-full overflow-hidden">
         <h3 class="text-base font-bold text-slate-900 dark:text-white mb-4">Clientes utilizando o site ao longo dos dias</h3>
-        <div class="h-64">
+        <div class="h-64 relative w-full">
           <canvas id="chartUsage"></canvas>
         </div>
       </div>
 
       <!-- CONFIGURAÇÃO DE WHATSAPP (WHITE LABEL COM MÁSCARA AUTOMÁTICA) -->
-      <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm p-6 rounded-3xl mt-6">
+      <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm p-6 rounded-3xl mt-6 w-full overflow-hidden">
         <h3 class="text-base font-bold text-slate-900 dark:text-white mb-2">Configuração de Suporte (WhatsApp)</h3>
         <p class="text-[13px] text-slate-600 dark:text-slate-300 mb-4">Defina o número de telefone que os clientes usarão para pedir ajuda. Digite apenas números (o 55 é adicionado automaticamente se esquecer).</p>
         
