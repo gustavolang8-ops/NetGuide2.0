@@ -322,18 +322,36 @@
 
   </main>
 
-  <!-- MODAL: RECURSOS -->
+  <!-- MODAL: RECURSOS COM CARROSSEL DE PASSOS -->
   <div id="modal-feature" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 shadow-2xl w-full max-w-lg rounded-3xl p-6 md:p-8 space-y-5 max-h-[90vh] overflow-y-auto">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 shadow-2xl w-full max-w-xl rounded-3xl p-6 md:p-8 space-y-5">
       <div class="flex justify-between items-start">
         <div class="flex items-center gap-3">
           <div id="modal-feature-icon" class="bg-cyan-600 p-2.5 rounded-2xl text-white shadow-md shadow-cyan-600/30"></div>
-          <h3 id="modal-feature-title" class="text-lg font-bold text-slate-900 dark:text-white">Título</h3>
+          <div>
+            <h3 id="modal-feature-title" class="text-lg font-bold text-slate-900 dark:text-white">Título</h3>
+            <span id="step-indicator" class="text-[11px] font-bold text-cyan-600 dark:text-cyan-400 uppercase tracking-widest">Passo 1 de 6</span>
+          </div>
         </div>
         <button onclick="closeFeatureModal()" class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200 hover:scale-110 active:scale-95"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
-      <div id="modal-feature-desc" class="text-[13px] text-slate-600 dark:text-slate-300 leading-relaxed space-y-3"></div>
-      <button onclick="closeFeatureModal()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-2xl text-xs uppercase tracking-wider transition-all duration-200 hover:scale-[1.02] shadow-lg shadow-cyan-600/20 active:scale-95">
+
+      <!-- CONTEÚDO DINÂMICO DO CARROSSEL -->
+      <div id="modal-feature-desc" class="text-[13px] text-slate-600 dark:text-slate-300 leading-relaxed space-y-4">
+        <!-- O conteúdo do passo atual injetado via JS -->
+      </div>
+
+      <!-- BOTÕES DE NAVEGAÇÃO DO CARROSSEL -->
+      <div id="carousel-nav" class="hidden flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-800">
+        <button onclick="prevStep()" id="btn-prev" class="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold py-2.5 px-5 rounded-2xl text-xs flex items-center gap-2 transition-all duration-200 active:scale-95">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i> Anterior
+        </button>
+        <button onclick="nextStep()" id="btn-next" class="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2.5 px-6 rounded-2xl text-xs flex items-center gap-2 transition-all duration-200 shadow-lg shadow-cyan-600/20 active:scale-95">
+          Próximo <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <button id="btn-modal-close-single" onclick="closeFeatureModal()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-2xl text-xs uppercase tracking-wider transition-all duration-200 hover:scale-[1.02] shadow-lg shadow-cyan-600/20 active:scale-95">
         Entendido
       </button>
     </div>
@@ -552,23 +570,68 @@
     }
     switchTab('scan');
 
+    // ==========================================
+    // SISTEMA DE CARROSSEL DE PASSOS PARA O GUIA DE RESET (6 PASSOS)
+    // ==========================================
+    let currentStep = 0;
+    const resetSteps = [
+      {
+        title: "1. Acessar o Endereço IP",
+        text: "Com o dispositivo conectado ao Wi-Fi padrão do roteador, abra o navegador e digite <code class='bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-cyan-600 font-mono'>192.168.0.1</code> na barra de endereços[cite: 9].",
+        image: "image_095d5b.png"
+      },
+      {
+        title: "2. Interface de Login",
+        text: "Vai aparecer a tela de boas-vindas do TP-Link AC1200[cite: 10]. Insira a senha padrão de acesso <code class='bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-cyan-600 font-mono'>admin</code>[cite: 10] e clique em Log In.",
+        image: "Interface de Login TP-Link AC1200.png"
+      },
+      {
+        title: "3. Configuração Rápida (Quick Setup)",
+        text: "Inicie o assistente de configuração rápida do roteador para prosseguir com os parâmetros de internet[cite: 11].",
+        image: "WhatsApp Image 2026-10-20 at 10.23.18.jpeg"
+      },
+      {
+        title: "4. Selecionar Conexão PPPoE",
+        text: "Na aba de configuração de tipo de internet, selecione a opção <strong>PPPoE</strong> conforme destacado na imagem[cite: 11] e clique em Next.",
+        image: "WhatsApp Image 2026-10-20 at 10.23.18.jpeg"
+      },
+      {
+        title: "5. Credenciais de Acesso PPPoE",
+        text: "Insira o <strong>usuário</strong> e a <strong>senha PPPoE</strong> fornecidos pelo seu provedor[cite: 11]. Não é necessário alterar mais nada nesta tela, apenas avance.",
+        image: "WhatsApp Image 2026-10-20 at 10.23.18.jpeg"
+      },
+      {
+        title: "6. Nome e Senha do Wi-Fi (SSID)",
+        text: "Por fim, configure o nome da rede e a senha para as frequências de <strong>2.4GHz e 5GHz</strong>[cite: 12]. Salve as alterações e o equipamento reiniciará com a nova configuração!",
+        image: "image.png"
+      }
+    ];
+
     function openFeatureModal(type) {
       const modal = document.getElementById('modal-feature');
       const title = document.getElementById('modal-feature-title');
-      const desc = document.getElementById('modal-feature-desc');
       const iconContainer = document.getElementById('modal-feature-icon');
+      const carouselNav = document.getElementById('carousel-nav');
+      const closeSingleBtn = document.getElementById('btn-modal-close-single');
 
       if (type === 'led') {
         title.innerText = "Diagnóstico Inteligente de LEDs (AC1200)";
-        desc.innerHTML = "O sistema analisa o padrão óptico do roteador. <strong>Atenção:</strong> Se todos os LEDs estiverem piscando simultaneamente, o equipamento foi restaurado para o padrão de fábrica (resetado) e perdeu as configurações de conexão.";
+        document.getElementById('step-indicator').innerText = "Informativo";
+        document.getElementById('modal-feature-desc').innerHTML = "O sistema analisa o padrão óptico do roteador. <strong>Atenção:</strong> Se todos os LEDs estiverem piscando simultaneamente, o equipamento foi restaurado para o padrão de fábrica (resetado) e perdeu as configurações de conexão.";
         iconContainer.innerHTML = '<i data-lucide="activity" class="w-5 h-5"></i>';
+        carouselNav.classList.add('hidden');
+        closeSingleBtn.classList.remove('hidden');
       } else if (type === 'cables') {
         title.innerText = "Guia de Portas e Cabos (RA)";
-        desc.innerHTML = "A Realidade Aumentada (RA) identifica o roteador. Certifique-se de que o cabo principal da fibra/modem está conectado firmemente na porta <strong>WAN (azul)</strong> e os dispositivos locais nas portas <strong>LAN</strong>.";
+        document.getElementById('step-indicator').innerText = "Informativo";
+        document.getElementById('modal-feature-desc').innerHTML = "A Realidade Aumentada (RA) identifica o roteador. Certifique-se de que o cabo principal da fibra/modem está conectado firmemente na porta <strong>WAN (azul)</strong> e os dispositivos locais nas portas <strong>LAN</strong>.";
         iconContainer.innerHTML = '<i data-lucide="cable" class="w-5 h-5"></i>';
+        carouselNav.classList.add('hidden');
+        closeSingleBtn.classList.remove('hidden');
       } else if (type === 'wifi') {
         title.innerText = "Configuração e Otimização do Wi-Fi";
-        desc.innerHTML = `
+        document.getElementById('step-indicator').innerText = "Informativo";
+        document.getElementById('modal-feature-desc').innerHTML = `
           <p>Permite revisar o nome da rede (SSID) e senha nas frequências de 2.4GHz e 5GHz diretamente pelo painel de controle do equipamento.</p>
           <div class="pt-3">
             <button onclick="toggleWifiInfo()" class="w-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-semibold py-2.5 px-4 rounded-xl text-[13px] transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer active:scale-95">
@@ -576,56 +639,64 @@
             </button>
             <div id="wifi-info-content" class="hidden mt-3 p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-100 dark:border-slate-800 space-y-2 text-[12px] leading-relaxed text-slate-600 dark:text-slate-300">
               <p>As redes Wi-Fi operam em duas frequências principais:</p>
-              <p>• <strong>2.4 GHz:</strong> Possui maior alcance de sinal e melhor capacidade de atravessar paredes e obstáculos. Por ser uma frequência amplamente utilizada, está mais sujeita a interferências e opera com velocidades moderadas.</p>
-              <p>• <strong>5 GHz:</strong> Oferece taxas de transferência mais elevadas e maior estabilidade de conexão, ideal para streaming e jogos. Em contrapartida, possui menor alcance e maior dificuldade para ultrapassar barreiras físicas.</p>
+              <p>• <strong>2.4 GHz:</strong> Possui maior alcance de sinal e melhor capacidade de atravessar paredes e obstáculos.</p>
+              <p>• <strong>5 GHz:</strong> Oferece taxas de transferência mais elevadas e maior estabilidade, ideal para streaming e jogos.</p>
             </div>
           </div>
         `;
         iconContainer.innerHTML = '<i data-lucide="wifi" class="w-5 h-5"></i>';
+        carouselNav.classList.add('hidden');
+        closeSingleBtn.classList.remove('hidden');
       } else if (type === 'reset-guide') {
-        title.innerText = "TP-Link AC1200 Resetado - Passo a Passo NetGuide";
-        desc.innerHTML = `
-          <p class="text-slate-700 dark:text-slate-300 font-medium mb-3">O sistema detectou o padrão de LEDs piscando, indicando reset de fábrica. Siga o guia prático abaixo para reconfigurar:</p>
-          <div class="space-y-3 text-left">
-            <div class="bg-slate-50 dark:bg-slate-800 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-700">
-              <strong class="text-cyan-600 dark:text-cyan-400 block mb-1">1. Conecte à Rede Wi-Fi Inicial</strong>
-              <p>Conecte um computador ou celular à rede Wi-Fi padrão gerada pelo roteador. O nome aparece como "Roteador" e a senha está na etiqueta na parte inferior (Senha Wireless).</p>
-            </div>
-
-            <div class="bg-slate-50 dark:bg-slate-800 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-700">
-              <strong class="text-cyan-600 dark:text-cyan-400 block mb-1">2. Acesse a Página Web</strong>
-              <p>Com o dispositivo conectado (mesmo sem internet), abra o navegador, digite <code class="bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded text-cyan-700 dark:text-cyan-300 font-mono">192.168.0.1</code> na barra de endereços e aperte Enter <span class="text-[11px] text-slate-400 block mt-0.5">(o IP pode variar conforme o equipamento)</span>.</p>
-            </div>
-
-            <div class="bg-slate-50 dark:bg-slate-800 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-700">
-              <strong class="text-cyan-600 dark:text-cyan-400 block mb-1">3. Insira a Senha</strong>
-              <p>Vai abrir uma página solicitando a senha. Insira a senha wireless informada na etiqueta.</p>
-            </div>
-
-            <div class="bg-slate-50 dark:bg-slate-800 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-700">
-              <strong class="text-cyan-600 dark:text-cyan-400 block mb-1">4. Selecione a Conexão PPPoE</strong>
-              <p>Na aba de configuração rápida, selecione a opção <strong>PPPoE</strong> e clique em avançar.</p>
-            </div>
-
-            <div class="bg-slate-50 dark:bg-slate-800 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-700">
-              <strong class="text-cyan-600 dark:text-cyan-400 block mb-1">5. Credenciais de Acesso</strong>
-              <p>Insira o <strong>usuário</strong> e a <strong>senha PPPoE</strong> fornecidos pelo provedor. Não é necessário marcar nem desmarcar mais nada, apenas clique em avançar.</p>
-            </div>
-
-            <div class="bg-slate-50 dark:bg-slate-800 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-700">
-              <strong class="text-cyan-600 dark:text-cyan-400 block mb-1">6. Nome e Senha do Wi-Fi (SSID)</strong>
-              <p>A próxima janela serve para configurar o nome e a senha do Wi-Fi:<br>
-              • <strong>SSID:</strong> Nome desejado para a rede <span class="text-[11px] text-slate-400 block">(dica: se tiver 5G disponível, adicione '5G' no final para diferenciar)</span><br>
-              • <strong>Password:</strong> Senha da rede Wi-Fi.<br>
-              Avance até o final e salve. O equipamento vai reiniciar com as novas configurações!</p>
-            </div>
-          </div>
-        `;
+        title.innerText = "Passo a Passo: Reconfiguração Padrão";
+        currentStep = 0;
         iconContainer.innerHTML = '<i data-lucide="refresh-cw" class="w-5 h-5"></i>';
+        carouselNav.classList.remove('hidden');
+        closeSingleBtn.classList.add('hidden');
+        renderStep();
       }
 
       lucide.createIcons();
       modal.classList.remove('hidden');
+    }
+
+    function renderStep() {
+      const step = resetSteps[currentStep];
+      document.getElementById('step-indicator').innerText = `Passo ${currentStep + 1} de ${resetSteps.length}`;
+      
+      let imageHtml = step.image ? `<div class="mt-3 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800 h-52 flex items-center justify-center"><img src="${step.image}" alt="Exemplo Passo ${currentStep + 1}" class="w-full h-full object-contain p-1"></div>` : `<div class="mt-3 rounded-2xl overflow-hidden border border-dashed border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/40 p-4 text-center text-slate-400 text-[11px]">Print de exemplo do Passo ${currentStep + 1}</div>`;
+
+      document.getElementById('modal-feature-desc').innerHTML = `
+        <p class="font-medium text-slate-800 dark:text-slate-200">${step.text}</p>
+        ${imageHtml}
+      `;
+
+      // Controla visibilidade dos botões
+      document.getElementById('btn-prev').style.visibility = currentStep === 0 ? 'hidden' : 'visible';
+      const nextBtn = document.getElementById('btn-next');
+      if (currentStep === resetSteps.length - 1) {
+        nextBtn.innerHTML = `Concluir <i data-lucide="check" class="w-4 h-4"></i>`;
+      } else {
+        nextBtn.innerHTML = `Próximo <i data-lucide="arrow-right" class="w-4 h-4"></i>`;
+      }
+      lucide.createIcons();
+    }
+
+    function nextStep() {
+      if (currentStep < resetSteps.length - 1) {
+        currentStep++;
+        renderStep();
+      } else {
+        closeFeatureModal();
+        showToast('Parabéns! Guia de reconfiguração concluído.', 'success');
+      }
+    }
+
+    function prevStep() {
+      if (currentStep > 0) {
+        currentStep--;
+        renderStep();
+      }
     }
 
     function toggleWifiInfo() {
